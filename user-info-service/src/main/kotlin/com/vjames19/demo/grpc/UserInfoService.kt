@@ -26,7 +26,7 @@ class UserInfoService : UserInfoServiceImplBase() {
         val users: Map<Long, UserInfo> = users()
 
         private fun users(): Map<Long, UserInfo> {
-            val names = listOf("Victor", "John", "Juan", "Pedor", "Jess", "Ly")
+            val names = listOf("Victor", "John", "Juan", "Pedro", "James", "Ly")
             val pairs = names.mapIndexed { i, name ->
                 i.toLong() to user(i.toLong(), name)
             }.toTypedArray()
