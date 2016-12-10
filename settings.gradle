@@ -1,6 +1,7 @@
 rootProject.name = 'grpc-microservice-demo'
 
 include 'proto'
+include 'common'
 include 'user-info-service'
 include 'user-projects-service'
 
