@@ -12,12 +12,14 @@ import io.grpc.stub.StreamObserver
 class UserInfoService : UserInfoServiceImplBase() {
 
     override fun getUser(request: UserRequest, responseObserver: StreamObserver<UserInfo>) {
-        if (!users.contains(request.id)) {
-            responseObserver.onError(Status.NOT_FOUND.asException())
-        } else {
-            responseObserver.onNext(users[request.id])
-            responseObserver.onCompleted()
+        responseObserver.single {
+            if (!users.contains(request.id)) {
+                throw Status.NOT_FOUND.asException()
+            } else {
+                users[request.id]!!
+            }
         }
+
     }
 
     companion object {

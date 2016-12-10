@@ -1,8 +1,5 @@
 package com.vjames19.demo.grpc
 
-import com.google.common.util.concurrent.FutureCallback
-import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
 import com.vjames19.demo.grpc.proto.*
 import com.vjames19.demo.grpc.proto.UserProjectServiceGrpc.UserProjectServiceImplBase
 import io.grpc.Status
@@ -26,7 +23,7 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
                         addAllProject(projects)
                     }.build()
                 } else {
-                  throw Status.NOT_FOUND.asException()
+                    throw Status.NOT_FOUND.asException()
                 }
             }
         }
