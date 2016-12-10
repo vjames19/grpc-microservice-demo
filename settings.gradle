@@ -4,4 +4,5 @@ include 'proto'
 include 'common'
 include 'user-info-service'
 include 'user-projects-service'
+include 'client'
 
