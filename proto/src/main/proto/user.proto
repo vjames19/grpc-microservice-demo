@@ -1,0 +1,56 @@
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.vjames19.demo.grpc";
+option java_outer_classname = "UserServiceProtos";
+
+package com.vjames19.demo.grpc;
+
+// The greeting service definition.
+service UserService {
+    // Sends a greeting
+    rpc GetUser (UserRequest) returns (UserResponse) {}
+}
+
+message UserRequest {
+    int64 id = 1;
+}
+
+message UserResponse {
+    UserInfo user = 1;
+    repeated Project project = 2;
+}
+
+service UserInfoService {
+    rpc GetUser(UserRequest) returns (UserInfo) {}
+}
+
+message UserInfoRequest {
+    int64 id = 1;
+}
+
+service UserProjectService {
+    rpc GetProjectsForUser(UserProjectsRequest) returns (UserProjectsResponse) {}
+}
+
+message UserProjectsRequest {
+    int64 id = 1;
+}
+
+message UserProjectsResponse {
+    repeated Project project = 1;
+}
+
+message UserInfo {
+    int64 id = 1;
+    string name = 2;
+    string email = 3;
+    string phone = 4;
+}
+
+message Project {
+    int64 id = 1;
+    string name = 3;
+    string description = 4;
+}
