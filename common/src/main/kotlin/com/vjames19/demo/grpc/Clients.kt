@@ -12,16 +12,16 @@ import java.util.concurrent.*
  */
 class Clients {
     companion object {
-        val userServicePort = 20000
-        val userInfoServicePort = 20001
-        val userProjectsServicePort = 20002
 
-        fun createChannel(host: String, port: Int, brave: Brave): ManagedChannel = ManagedChannelBuilder
-                .forAddress(host, port)
-                .intercept(BraveGrpcClientInterceptor.create(brave))
-                .executor(executor())
-                .usePlaintext(true)
-                .build()
+        fun createChannel(host: String, port: Int, brave: Brave): ManagedChannel {
+            println("Creating channel for $host:$port")
+            return ManagedChannelBuilder
+                    .forAddress(host, port)
+                    .intercept(BraveGrpcClientInterceptor.create(brave))
+                    .executor(executor())
+                    .usePlaintext(true)
+                    .build()
+        }
 
         private fun executor(): Executor {
             val threadFactory = ThreadFactoryBuilder()
@@ -34,6 +34,10 @@ class Clients {
             return ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                     Runtime.getRuntime().availableProcessors() * 10, 60L, TimeUnit.SECONDS,
                     LinkedBlockingQueue(100), threadFactory, rejectedExecutionHandler)
+        }
+
+        fun serverPort(default: Int): Int {
+            return System.getProperty("demo.server.port")?.toInt() ?: default
         }
     }
 }

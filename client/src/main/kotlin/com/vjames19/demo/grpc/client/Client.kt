@@ -1,6 +1,8 @@
 package com.vjames19.demo.grpc.client
 
 import com.vjames19.demo.grpc.Clients
+import com.vjames19.demo.grpc.Config
+import com.vjames19.demo.grpc.Config.Companion.userServicePort
 import com.vjames19.demo.grpc.Tracing
 import com.vjames19.demo.grpc.proto.UserRequest
 import com.vjames19.demo.grpc.proto.UserServiceGrpc
@@ -16,14 +18,14 @@ import kotlin.concurrent.thread
  * Created by vreventos on 12/10/16.
  */
 fun main(args: Array<String>) {
-    val userServiceChannel = Clients.createChannel("localhost", Clients.userServicePort, Tracing.brave("main-client"))
+    val userServiceChannel = Clients.createChannel("localhost", userServicePort, Tracing.brave("main-client"))
     val service = UserServiceGrpc.newFutureStub(userServiceChannel)
 
     val totalTime = AtomicLong()
     val totalRequests = AtomicInteger()
     (1..1).map {
         thread {
-            (1..10000).map {
+            (1..1000).map {
                 val id = ThreadLocalRandom.current().nextLong(1, 5)
                 totalRequests.incrementAndGet()
 
@@ -34,9 +36,9 @@ fun main(args: Array<String>) {
                     totalTime.addAndGet(end)
                     if (throwable != null) {
                         val status = Status.fromThrowable(throwable)
-//                        println("request for id $id failed $status took: $end")
+                        println("request for id $id failed $status took: $end")
                     } else {
-//                        println("request for id $id success: ${userResponse.user.id} took: $end")
+                        println("request for id $id success: ${userResponse.user.id} took: $end")
                     }
 
                     null

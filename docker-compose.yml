@@ -1,0 +1,42 @@
+version: '2'
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+    - "9411:9411"
+
+  user-info:
+    build: user-info-service/build/docker
+#    image: com.vjames19.demo.grpc/user-info-service
+    ports:
+    - "20001:8080"
+    env_file: ./common.env
+    links:
+    - zipkin
+    expose:
+    - "8080"
+
+  user-projects:
+    build: user-projects-service/build/docker
+#    image: com.vjames19.demo.grpc/user-projects-service
+    ports:
+    - "20002:8080"
+    env_file: ./common.env
+    links:
+    - zipkin
+    - user-info
+    expose:
+        - "8080"
+
+  user-service:
+    build: user-service/build/docker
+#    image: com.vjames19.demo.grpc/user-service
+    ports:
+    - "20000:8080"
+    env_file: ./common.env
+    links:
+    - zipkin
+    - user-info
+    - user-projects
+    expose:
+        - "8080"

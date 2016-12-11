@@ -1,5 +1,7 @@
 package com.vjames19.demo.grpc
 
+import com.vjames19.demo.grpc.Clients.Companion.serverPort
+import com.vjames19.demo.grpc.Config.Companion.userInfoServicePort
 import com.vjames19.demo.grpc.proto.UserInfo
 import com.vjames19.demo.grpc.proto.UserInfoRequest
 import com.vjames19.demo.grpc.proto.UserInfoServiceGrpc.UserInfoServiceImplBase
@@ -46,6 +48,6 @@ class UserInfoService : UserInfoServiceImplBase() {
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserInfoService(), Clients.userInfoServicePort, Tracing.brave("userInfoService"))
+    GrpcServer(UserInfoService(), serverPort(userInfoServicePort), Tracing.brave("userInfoService"))
             .startAndBlock()
 }

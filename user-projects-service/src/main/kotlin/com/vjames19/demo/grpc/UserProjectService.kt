@@ -1,5 +1,9 @@
 package com.vjames19.demo.grpc
 
+import com.vjames19.demo.grpc.Clients.Companion.serverPort
+import com.vjames19.demo.grpc.Config.Companion.userInfoHost
+import com.vjames19.demo.grpc.Config.Companion.userInfoServicePort
+import com.vjames19.demo.grpc.Config.Companion.userProjectsServicePort
 import com.vjames19.demo.grpc.proto.*
 import com.vjames19.demo.grpc.proto.UserProjectServiceGrpc.UserProjectServiceImplBase
 import io.grpc.Status
@@ -52,11 +56,11 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserProjectService(createUserInfoService()), Clients.userProjectsServicePort, Tracing.brave("userProjects"))
+    GrpcServer(UserProjectService(createUserInfoService()), serverPort(userProjectsServicePort), Tracing.brave("userProjects"))
         .startAndBlock()
 }
 
 fun createUserInfoService(): UserInfoServiceGrpc.UserInfoServiceFutureStub {
-    val channel = Clients.createChannel("localhost", Clients.userInfoServicePort, Tracing.brave("UserProjectService: userInfo Client"))
+    val channel = Clients.createChannel(userInfoHost, userInfoServicePort, Tracing.brave("UserProjectService: userInfo Client"))
     return UserInfoServiceGrpc.newFutureStub(channel)
 }
