@@ -23,9 +23,9 @@ fun main(args: Array<String>) {
 
     val totalTime = AtomicLong()
     val totalRequests = AtomicInteger()
-    (1..1).map {
+    (1..4).map {
         thread {
-            (1..1000).map {
+            (1..10000).map {
                 val id = ThreadLocalRandom.current().nextLong(1, 5)
                 totalRequests.incrementAndGet()
 
@@ -36,9 +36,9 @@ fun main(args: Array<String>) {
                     totalTime.addAndGet(end)
                     if (throwable != null) {
                         val status = Status.fromThrowable(throwable)
-                        println("request for id $id failed $status took: $end")
+//                        println("request for id $id failed $status took: $end")
                     } else {
-                        println("request for id $id success: ${userResponse.user.id} took: $end")
+//                        println("request for id $id success: ${userResponse.user.id} took: $end")
                     }
 
                     null
