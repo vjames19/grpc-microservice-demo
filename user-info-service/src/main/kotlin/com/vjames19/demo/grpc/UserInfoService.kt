@@ -1,6 +1,7 @@
 package com.vjames19.demo.grpc
 
 import com.vjames19.demo.grpc.proto.UserInfo
+import com.vjames19.demo.grpc.proto.UserInfoRequest
 import com.vjames19.demo.grpc.proto.UserInfoServiceGrpc.UserInfoServiceImplBase
 import com.vjames19.demo.grpc.proto.UserRequest
 import io.grpc.Status
@@ -11,7 +12,7 @@ import io.grpc.stub.StreamObserver
  */
 class UserInfoService : UserInfoServiceImplBase() {
 
-    override fun getUser(request: UserRequest, responseObserver: StreamObserver<UserInfo>) {
+    override fun getUser(request: UserInfoRequest, responseObserver: StreamObserver<UserInfo>) {
         responseObserver.single {
             if (!users.contains(request.id)) {
                 throw Status.NOT_FOUND.asException()
@@ -42,5 +43,12 @@ class UserInfoService : UserInfoServiceImplBase() {
                 phone = "787-123-1234"
             }.build()
         }
+    }
+}
+
+fun main(args: Array<String>) {
+    GrpcServer(UserInfoService(), Clients.userInfoServicePort).apply {
+        start()
+        blockUntilShutdown()
     }
 }

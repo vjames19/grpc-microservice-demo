@@ -30,7 +30,7 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
     }
 
     fun userExists(id: Long): CompletableFuture<Boolean> {
-        val request = UserRequest.newBuilder().apply { this.id = id }.build()
+        val request = UserInfoRequest.newBuilder().apply { this.id = id }.build()
         return userInfoService.getUser(request).toCompletableFuture().thenApply {
             it != null
         }
@@ -51,4 +51,16 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
             }.build()
         }
     }
+}
+
+fun main(args: Array<String>) {
+    GrpcServer(UserProjectService(createUserInfoService()), Clients.userProjectsServicePort).apply {
+        start()
+        blockUntilShutdown()
+    }
+}
+
+fun createUserInfoService(): UserInfoServiceGrpc.UserInfoServiceFutureStub {
+    val channel = Clients.createChannel("localhost", Clients.userInfoServicePort)
+    return UserInfoServiceGrpc.newFutureStub(channel)
 }

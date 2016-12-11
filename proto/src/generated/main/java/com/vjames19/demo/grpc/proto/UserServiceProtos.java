@@ -71,15 +71,15 @@ public final class UserServiceProtos {
       "id\030\001 \001(\003\022\014\n\004name\030\003 \001(\t\022\023\n\013description\030\004 " +
       "\001(\t2e\n\013UserService\022V\n\007GetUser\022#.com.vjam" +
       "es19.demo.grpc.UserRequest\032$.com.vjames1" +
-      "9.demo.grpc.UserResponse\"\0002e\n\017UserInfoSe" +
-      "rvice\022R\n\007GetUser\022#.com.vjames19.demo.grp" +
-      "c.UserRequest\032 .com.vjames19.demo.grpc.U" +
-      "serInfo\"\0002\207\001\n\022UserProjectService\022q\n\022GetP" +
-      "rojectsForUser\022+.com.vjames19.demo.grpc." +
-      "UserProjectsRequest\032,.com.vjames19.demo." +
-      "grpc.UserProjectsResponse\"\000B3\n\034com.vjame",
-      "s19.demo.grpc.protoB\021UserServiceProtosP\001" +
-      "b\006proto3"
+      "9.demo.grpc.UserResponse\"\0002i\n\017UserInfoSe" +
+      "rvice\022V\n\007GetUser\022\'.com.vjames19.demo.grp" +
+      "c.UserInfoRequest\032 .com.vjames19.demo.gr" +
+      "pc.UserInfo\"\0002\207\001\n\022UserProjectService\022q\n\022" +
+      "GetProjectsForUser\022+.com.vjames19.demo.g" +
+      "rpc.UserProjectsRequest\032,.com.vjames19.d" +
+      "emo.grpc.UserProjectsResponse\"\000B3\n\034com.v",
+      "james19.demo.grpc.protoB\021UserServiceProt" +
+      "osP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

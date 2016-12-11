@@ -1,31 +1,31 @@
 package com.vjames19.demo.grpc.client
 
+import com.vjames19.demo.grpc.Clients
 import com.vjames19.demo.grpc.proto.UserRequest
 import com.vjames19.demo.grpc.proto.UserServiceGrpc
 import com.vjames19.demo.grpc.toCompletableFuture
-import io.grpc.ManagedChannelBuilder
+import io.grpc.Status
+import kotlin.concurrent.timerTask
 
 /**
  * Created by vreventos on 12/10/16.
  */
-
 fun main(args: Array<String>) {
-    val userServiceChannel = ManagedChannelBuilder.forAddress("localhost", 15001)
-            .loadBalancerFactory()
-            .usePlaintext(true)
-            .build()
+    val userServiceChannel = Clients.createChannel("localhost", Clients.userServicePort)
     val service = UserServiceGrpc.newFutureStub(userServiceChannel)
 
-    (1..1000).map {
+    (1..20).map {
         val future = service.getUser(UserRequest.newBuilder().apply { id = it.toLong() }.build()).toCompletableFuture()
         val id = it
 
+        val start = System.nanoTime()
         future.handle { userResponse, throwable ->
+            val end = System.nanoTime() - start
             if (throwable != null) {
-                println("request for id $id failed")
-                throwable.printStackTrace(System.out)
+                val status = Status.fromThrowable(throwable)
+                println("request for id $id failed $status took: $end")
             } else {
-                println("request for id $id success: ${userResponse.toString()}")
+                println("request for id $id success: ${userResponse.user.id} took: $end")
             }
 
             null
@@ -34,4 +34,3 @@ fun main(args: Array<String>) {
         it.get()
     }
 }
-

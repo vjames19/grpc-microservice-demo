@@ -21,7 +21,7 @@ message UserResponse {
 }
 
 service UserInfoService {
-    rpc GetUser(UserRequest) returns (UserInfo) {}
+    rpc GetUser(UserInfoRequest) returns (UserInfo) {}
 }
 
 message UserInfoRequest {

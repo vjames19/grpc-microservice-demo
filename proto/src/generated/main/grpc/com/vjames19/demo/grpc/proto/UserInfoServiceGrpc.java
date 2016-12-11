@@ -28,13 +28,13 @@ public class UserInfoServiceGrpc {
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<com.vjames19.demo.grpc.proto.UserRequest,
+  public static final io.grpc.MethodDescriptor<com.vjames19.demo.grpc.proto.UserInfoRequest,
       com.vjames19.demo.grpc.proto.UserInfo> METHOD_GET_USER =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
               "com.vjames19.demo.grpc.UserInfoService", "GetUser"),
-          io.grpc.protobuf.ProtoUtils.marshaller(com.vjames19.demo.grpc.proto.UserRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.vjames19.demo.grpc.proto.UserInfoRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.vjames19.demo.grpc.proto.UserInfo.getDefaultInstance()));
 
   /**
@@ -66,7 +66,7 @@ public class UserInfoServiceGrpc {
 
     /**
      */
-    public void getUser(com.vjames19.demo.grpc.proto.UserRequest request,
+    public void getUser(com.vjames19.demo.grpc.proto.UserInfoRequest request,
         io.grpc.stub.StreamObserver<com.vjames19.demo.grpc.proto.UserInfo> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_GET_USER, responseObserver);
     }
@@ -77,7 +77,7 @@ public class UserInfoServiceGrpc {
             METHOD_GET_USER,
             asyncUnaryCall(
               new MethodHandlers<
-                com.vjames19.demo.grpc.proto.UserRequest,
+                com.vjames19.demo.grpc.proto.UserInfoRequest,
                 com.vjames19.demo.grpc.proto.UserInfo>(
                   this, METHODID_GET_USER)))
           .build();
@@ -104,7 +104,7 @@ public class UserInfoServiceGrpc {
 
     /**
      */
-    public void getUser(com.vjames19.demo.grpc.proto.UserRequest request,
+    public void getUser(com.vjames19.demo.grpc.proto.UserInfoRequest request,
         io.grpc.stub.StreamObserver<com.vjames19.demo.grpc.proto.UserInfo> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_GET_USER, getCallOptions()), request, responseObserver);
@@ -131,7 +131,7 @@ public class UserInfoServiceGrpc {
 
     /**
      */
-    public com.vjames19.demo.grpc.proto.UserInfo getUser(com.vjames19.demo.grpc.proto.UserRequest request) {
+    public com.vjames19.demo.grpc.proto.UserInfo getUser(com.vjames19.demo.grpc.proto.UserInfoRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_USER, getCallOptions(), request);
     }
@@ -158,7 +158,7 @@ public class UserInfoServiceGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<com.vjames19.demo.grpc.proto.UserInfo> getUser(
-        com.vjames19.demo.grpc.proto.UserRequest request) {
+        com.vjames19.demo.grpc.proto.UserInfoRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_GET_USER, getCallOptions()), request);
     }
@@ -184,7 +184,7 @@ public class UserInfoServiceGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_GET_USER:
-          serviceImpl.getUser((com.vjames19.demo.grpc.proto.UserRequest) request,
+          serviceImpl.getUser((com.vjames19.demo.grpc.proto.UserInfoRequest) request,
               (io.grpc.stub.StreamObserver<com.vjames19.demo.grpc.proto.UserInfo>) responseObserver);
           break;
         default:
