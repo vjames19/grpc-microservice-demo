@@ -5,6 +5,7 @@ buildscript {
 }
 
 ext.grpcVersion = '1.0.2'
+ext.braveVersion = '3.16.0'
 
 allprojects {
     apply plugin: 'java'
@@ -12,8 +13,6 @@ allprojects {
 
     group = 'com.vjames19.demo.grpc'
     version = '0.0.1'
-
-    ext.grpcVersion = '1.0.2'
 }
 
 subprojects {

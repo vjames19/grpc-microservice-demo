@@ -1,15 +1,19 @@
 package com.vjames19.demo.grpc
 
+import com.github.kristofa.brave.Brave
+import com.github.kristofa.brave.grpc.BraveGrpcServerInterceptor
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import io.grpc.ServerInterceptors
 import java.io.IOException
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicInteger
 
 class GrpcServer(private val bindableService: BindableService,
-                 private val port: Int) {
+                 private val port: Int,
+                 private val brave: Brave) {
     private var server: Server? = null
 
     fun startAndBlock(): Unit {
@@ -21,7 +25,7 @@ class GrpcServer(private val bindableService: BindableService,
     fun start() {
         println("Starting server for service ${bindableService.javaClass.name} on port $port")
         server = ServerBuilder.forPort(port)
-                .addService(bindableService)
+                .addService(ServerInterceptors.intercept(bindableService, BraveGrpcServerInterceptor.create(brave)))
                 .executor(executor())
                 .build()
                 .start()

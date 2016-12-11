@@ -46,6 +46,6 @@ class UserInfoService : UserInfoServiceImplBase() {
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserInfoService(), Clients.userInfoServicePort)
+    GrpcServer(UserInfoService(), Clients.userInfoServicePort, Tracing.brave("userInfoService"))
             .startAndBlock()
 }

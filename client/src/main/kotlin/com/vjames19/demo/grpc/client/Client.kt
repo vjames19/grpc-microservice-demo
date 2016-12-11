@@ -1,6 +1,7 @@
 package com.vjames19.demo.grpc.client
 
 import com.vjames19.demo.grpc.Clients
+import com.vjames19.demo.grpc.Tracing
 import com.vjames19.demo.grpc.proto.UserRequest
 import com.vjames19.demo.grpc.proto.UserServiceGrpc
 import com.vjames19.demo.grpc.toCompletableFuture
@@ -15,20 +16,19 @@ import kotlin.concurrent.thread
  * Created by vreventos on 12/10/16.
  */
 fun main(args: Array<String>) {
-    val userServiceChannel = Clients.createChannel("localhost", Clients.userServicePort)
+    val userServiceChannel = Clients.createChannel("localhost", Clients.userServicePort, Tracing.brave("main-client"))
     val service = UserServiceGrpc.newFutureStub(userServiceChannel)
 
     val totalTime = AtomicLong()
     val totalRequests = AtomicInteger()
-    (1..4).map {
+    (1..1).map {
         thread {
             (1..10000).map {
-                val id = ThreadLocalRandom.current().nextLong(1, 10)
-                val future = service.getUser(UserRequest.newBuilder().apply { this.id = id }.build()).toCompletableFuture()
+                val id = ThreadLocalRandom.current().nextLong(1, 5)
                 totalRequests.incrementAndGet()
 
-
                 val start = System.nanoTime()
+                val future = service.getUser(UserRequest.newBuilder().apply { this.id = id }.build()).toCompletableFuture()
                 future.handle { userResponse, throwable ->
                     val end = System.nanoTime() - start
                     totalTime.addAndGet(end)

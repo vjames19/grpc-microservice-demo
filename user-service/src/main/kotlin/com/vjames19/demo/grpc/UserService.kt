@@ -35,16 +35,16 @@ class UserService(val userInfoService: UserInfoServiceFutureStub,
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserService(createUserInfoService(), createUserProjectsService()), Clients.userServicePort)
+    GrpcServer(UserService(createUserInfoService(), createUserProjectsService()), Clients.userServicePort, Tracing.brave("userService"))
             .startAndBlock()
 }
 
 fun createUserInfoService(): UserInfoServiceFutureStub {
-    val channel = Clients.createChannel("localhost", Clients.userInfoServicePort)
+    val channel = Clients.createChannel("localhost", Clients.userInfoServicePort, Tracing.brave("UserService: userInfo client"))
     return UserInfoServiceGrpc.newFutureStub(channel)
 }
 
 fun createUserProjectsService(): UserProjectServiceFutureStub {
-    val channel = Clients.createChannel("localhost", Clients.userProjectsServicePort)
+    val channel = Clients.createChannel("localhost", Clients.userProjectsServicePort, Tracing.brave("UserService: userProjects client"))
     return UserProjectServiceGrpc.newFutureStub(channel)
 }

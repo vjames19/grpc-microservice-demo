@@ -1,5 +1,7 @@
 package com.vjames19.demo.grpc
 
+import com.github.kristofa.brave.Brave
+import com.github.kristofa.brave.grpc.BraveGrpcClientInterceptor
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
@@ -14,8 +16,9 @@ class Clients {
         val userInfoServicePort = 20001
         val userProjectsServicePort = 20002
 
-        fun createChannel(host: String, port: Int): ManagedChannel = ManagedChannelBuilder
+        fun createChannel(host: String, port: Int, brave: Brave): ManagedChannel = ManagedChannelBuilder
                 .forAddress(host, port)
+                .intercept(BraveGrpcClientInterceptor.create(brave))
                 .executor(executor())
                 .usePlaintext(true)
                 .build()
