@@ -29,3 +29,18 @@ fun <V> CompletableFuture<V>.respond(responseObserver: StreamObserver<V>): Unit 
         }
     }
 }
+
+fun <V> StreamObserver<V>.respond(future: CompletableFuture<V>): Unit {
+    future.handle { v, throwable ->
+        if (throwable != null) {
+            this.onError(Status.fromThrowable(throwable).asException())
+        } else {
+            this.onNext(v)
+            this.onCompleted()
+        }
+    }
+}
+
+fun <V> StreamObserver<V>.respond(block: () -> CompletableFuture<V>): Unit {
+    this.respond(block())
+}

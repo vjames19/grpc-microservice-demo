@@ -3,7 +3,6 @@ package com.vjames19.demo.grpc
 import com.vjames19.demo.grpc.proto.UserInfo
 import com.vjames19.demo.grpc.proto.UserInfoRequest
 import com.vjames19.demo.grpc.proto.UserInfoServiceGrpc.UserInfoServiceImplBase
-import com.vjames19.demo.grpc.proto.UserRequest
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 
@@ -47,8 +46,6 @@ class UserInfoService : UserInfoServiceImplBase() {
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserInfoService(), Clients.userInfoServicePort).apply {
-        start()
-        blockUntilShutdown()
-    }
+    GrpcServer(UserInfoService(), Clients.userInfoServicePort)
+            .startAndBlock()
 }

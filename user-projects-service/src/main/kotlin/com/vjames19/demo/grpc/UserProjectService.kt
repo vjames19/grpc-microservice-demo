@@ -12,19 +12,17 @@ import java.util.concurrent.CompletableFuture
 class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServiceFutureStub) : UserProjectServiceImplBase() {
 
     override fun getProjectsForUser(request: UserProjectsRequest, responseObserver: StreamObserver<UserProjectsResponse>) {
-        userExists(request.id).handle { exists, throwable ->
-            responseObserver.single {
-                if (throwable != null) {
-                    throw throwable
-                }
+        responseObserver.respond(userProjects(request.id))
+    }
 
-                if (exists) {
-                    UserProjectsResponse.newBuilder().apply {
-                        addAllProject(projects)
-                    }.build()
-                } else {
-                    throw Status.NOT_FOUND.asException()
-                }
+    fun userProjects(id: Long): CompletableFuture<UserProjectsResponse> {
+        return userExists(id).thenApplyAsync { exists ->
+            if (exists) {
+                UserProjectsResponse.newBuilder().apply {
+                    addAllProject(projects)
+                }.build()
+            } else {
+                throw Status.NOT_FOUND.asException()
             }
         }
     }
@@ -38,7 +36,7 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
 
     companion object {
         val projects: List<Project> by lazy {
-            (1..10000).map {
+            (1..100).map {
                 project(it.toLong(), "project $it")
             }
         }
@@ -54,10 +52,8 @@ class UserProjectService(val userInfoService: UserInfoServiceGrpc.UserInfoServic
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserProjectService(createUserInfoService()), Clients.userProjectsServicePort).apply {
-        start()
-        blockUntilShutdown()
-    }
+    GrpcServer(UserProjectService(createUserInfoService()), Clients.userProjectsServicePort)
+        .startAndBlock()
 }
 
 fun createUserInfoService(): UserInfoServiceGrpc.UserInfoServiceFutureStub {

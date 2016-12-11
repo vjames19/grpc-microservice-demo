@@ -23,20 +23,20 @@ class UserService(val userInfoService: UserInfoServiceFutureStub,
                 .build()
         val userProjectsFuture = userProjectService.getProjectsForUser(userProjectsRequest).toCompletableFuture()
 
-        userInfoFuture.thenCombineAsync(userProjectsFuture, { userInfo, userProjects ->
+        val response = userInfoFuture.thenCombineAsync(userProjectsFuture, { userInfo, userProjects ->
             UserResponse.newBuilder().apply {
                 user = userInfo
                 addAllProject(userProjects.projectList)
             }.build()
-        }).respond(responseObserver)
+        })
+
+        responseObserver.respond(response)
     }
 }
 
 fun main(args: Array<String>) {
-    GrpcServer(UserService(createUserInfoService(), createUserProjectsService()), Clients.userServicePort).apply {
-        start()
-        blockUntilShutdown()
-    }
+    GrpcServer(UserService(createUserInfoService(), createUserProjectsService()), Clients.userServicePort)
+            .startAndBlock()
 }
 
 fun createUserInfoService(): UserInfoServiceFutureStub {

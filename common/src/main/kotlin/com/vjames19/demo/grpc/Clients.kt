@@ -1,6 +1,9 @@
 package com.vjames19.demo.grpc
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder
+import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
+import java.util.concurrent.*
 
 /**
  * Created by vreventos on 12/10/16.
@@ -11,9 +14,23 @@ class Clients {
         val userInfoServicePort = 20001
         val userProjectsServicePort = 20002
 
-        fun createChannel(host: String, port: Int) = ManagedChannelBuilder
+        fun createChannel(host: String, port: Int): ManagedChannel = ManagedChannelBuilder
                 .forAddress(host, port)
+                .executor(executor())
                 .usePlaintext(true)
                 .build()
+
+        private fun executor(): Executor {
+            val threadFactory = ThreadFactoryBuilder()
+                    .setNameFormat("grpcServerExecutor")
+                    .setDaemon(true)
+                    .build()
+
+            val rejectedExecutionHandler = RejectedExecutionHandler { r, executor -> executor.queue.put(r) }
+
+            return ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
+                    Runtime.getRuntime().availableProcessors() * 10, 60L, TimeUnit.SECONDS,
+                    LinkedBlockingQueue(100), threadFactory, rejectedExecutionHandler)
+        }
     }
 }

@@ -1,19 +1,28 @@
 package com.vjames19.demo.grpc
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import java.io.IOException
+import java.util.concurrent.*
+import java.util.concurrent.atomic.AtomicInteger
 
 class GrpcServer(private val bindableService: BindableService,
                  private val port: Int) {
     private var server: Server? = null
 
+    fun startAndBlock(): Unit {
+        start()
+        blockUntilShutdown()
+    }
+
     @Throws(IOException::class)
     fun start() {
-        println("Starting server")
+        println("Starting server for service ${bindableService.javaClass.name} on port $port")
         server = ServerBuilder.forPort(port)
                 .addService(bindableService)
+                .executor(executor())
                 .build()
                 .start()
 
@@ -39,6 +48,19 @@ class GrpcServer(private val bindableService: BindableService,
     @Throws(InterruptedException::class)
     fun blockUntilShutdown() {
         server?.let { it.awaitTermination() }
+    }
+
+    private fun executor(): Executor {
+        val threadFactory = ThreadFactoryBuilder()
+                .setNameFormat("grpcServerExecutor")
+                .setDaemon(true)
+                .build()
+
+        val rejectedExecutionHandler = RejectedExecutionHandler { r, executor -> executor.queue.put(r) }
+
+        return ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
+                Runtime.getRuntime().availableProcessors() * 10, 60L, TimeUnit.SECONDS,
+                LinkedBlockingQueue(100), threadFactory, rejectedExecutionHandler)
     }
 
 }
