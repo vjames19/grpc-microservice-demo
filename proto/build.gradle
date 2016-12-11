@@ -36,32 +36,6 @@ protobuf {
 
 idea {
     module {
-        // Not using generatedSourceDirs because of
-        // https://discuss.gradle.org/t/support-for-intellij-2016/15294/8
-//        iml {
-//
-//
-//            beforeMerged { m ->
-////                m.sourceDirs += file("${projectDir}/build/generated/source/proto/main/java");
-////                m.sourceDirs += file("${projectDir}/build/generated/source/proto/main/grpc");
-//                m.excludeFolders.clear()
-//                println("before ${m.excludeFolders}")
-//            }
-//
-//            whenMerged { m ->
-//                println("excluded ${m.excludeFolders}")
-////                excludeDirs -= file("${projectDir}/build")
-////                println("excluded ${m.excludeFolders}")
-////                m.excludeFolders = files { new File("${projectDir}/build").listFiles( { d, name -> name != 'generated' } as FilenameFilter)} as Set
-//            }
-//        }
-
-//        TODO: Remove the build folder from the excludes
-//        def f = files { new File("${projectDir}/build").listFiles( { d, name -> name != 'generated' } as FilenameFilter)}
-//        println("files ${f.files}")
-//        excludeDirs += files { new File("${projectDir}/build").listFiles( { d, name -> name != 'generated' } as FilenameFilter)}
-//        excludeDirs -= file("${projectDir}/build")
-
         sourceDirs += file("${projectDir}/src/generated/main/java");
         sourceDirs += file("${projectDir}/src/generated/main/grpc");
     }
